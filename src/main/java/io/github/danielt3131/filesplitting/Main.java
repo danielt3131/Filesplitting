@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args) {
         //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
         // to see how IntelliJ IDEA suggests fixing it.
-        long chunkSize = 1024 * 1024;  // 1 MiB
+        long chunkSize = 1000 * 1000;  // 1 MiB
         String inputName = "./input";
         String outputName;
         Scanner scanner = new Scanner(System.in);
@@ -30,14 +30,14 @@ public class Main {
                 long i;
                 for (i = 0; i < numberOfChunks; i++) {
                     inputStream.read(buffer, 0, buffer.length);
-                    outputName = String.format("%s.%d", inputName, i);
+                    outputName = String.format("%s.%d.bin", inputName, i + 1);
                     FileOutputStream outputStream = new FileOutputStream(outputName);
                     outputStream.write(buffer, 0, buffer.length);
                     outputStream.close();
                 }
                 if (remainderChunkSize != 0){
                     inputStream.read(buffer, 0, (int) chunkSize);
-                    outputName = String.format("%s.%d", inputName, i);
+                    outputName = String.format("%s.%d.bin", inputName, i + 1);
                     FileOutputStream outputStream = new FileOutputStream(outputName);
                     outputStream.write(buffer, 0, (int) remainderChunkSize);
                     outputStream.close();
@@ -60,7 +60,7 @@ public class Main {
             long splitFileSize = 0;
             boolean isCompleted = false;
             while (isCompleted == false){
-                splitFileName = String.format("%s.%d", inputName, i);
+                splitFileName = String.format("%s.%d.bin", inputName, i + 1);
                 try {
                     File splitFile = new File(splitFileName);
                     if (splitFile.exists()) {
