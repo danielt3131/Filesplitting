@@ -9,14 +9,14 @@ public class Main {
     public static void main(String[] args) {
         //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
         // to see how IntelliJ IDEA suggests fixing it.
-        long chunkSize = 101048576;
+        long chunkSize = 1024 * 1024;  // 1 MiB
         String inputName = "./input";
         String outputName;
         File inputFile = new File(inputName);
         if (!inputFile.exists() || !inputFile.isFile()){
             return;
         }
-        byte buffer[] = new byte[(int) chunkSize];
+        byte buffer[] = new byte[(int) chunkSize];  // 1 MiB buffer
         long numberOfChunks = inputFile.length() / chunkSize;
         System.out.printf("Size : %d\n", inputFile.length() / chunkSize);
         long remainderChunkSize = inputFile.length() % chunkSize;
