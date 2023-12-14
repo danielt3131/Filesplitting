@@ -14,6 +14,7 @@ public class Main {
         String inputName = "./input";
         String outputName;
         Scanner scanner = new Scanner(System.in);
+        byte buffer[] = new byte[(int) chunkSize];  // 1 MiB buffer
         System.out.println("Press 1 to split the file input or press 2 to merge the split files back together");
         int selection =  scanner.nextInt();
         if (selection == 1){
@@ -21,7 +22,6 @@ public class Main {
             if (!inputFile.exists() || !inputFile.isFile()){
                 return;
             }
-            byte buffer[] = new byte[(int) chunkSize];  // 1 MiB buffer
             long numberOfChunks = inputFile.length() / chunkSize;
             System.out.printf("Size : %d\n", inputFile.length() / chunkSize);
             long remainderChunkSize = inputFile.length() % chunkSize;
@@ -48,7 +48,37 @@ public class Main {
                 throw new RuntimeException(e);
             }
         } else if (selection == 2){
-
+            outputName = "./merged";
+            FileOutputStream mergedFile = null;
+            try {
+                mergedFile = new FileOutputStream(outputName);
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+            long i = 0;
+            String splitFileName;
+            long splitFileSize = 0;
+            boolean isCompleted = false;
+            while (isCompleted == false){
+                splitFileName = String.format("%s.%d", inputName, i);
+                try {
+                    File splitFile = new File(splitFileName);
+                    if (splitFile.exists()) {
+                        FileInputStream splitFileStream = new FileInputStream(splitFile);
+                        splitFileSize = splitFileStream.getChannel().size();
+                        splitFileStream.read(buffer, 0, (int) splitFileSize);
+                        mergedFile.write(buffer, 0, (int) splitFileSize);
+                    } else {
+                        isCompleted = true;
+                        break;
+                    }
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                i++;
+            }
         }
     }
 }
