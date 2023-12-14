@@ -65,7 +65,7 @@ public class Main {
                     File splitFile = new File(splitFileName);
                     if (splitFile.exists()) {
                         FileInputStream splitFileStream = new FileInputStream(splitFile);
-                        splitFileSize = splitFileStream.getChannel().size();
+                        splitFileSize = splitFile.length();
                         splitFileStream.read(buffer, 0, (int) splitFileSize);
                         mergedFile.write(buffer, 0, (int) splitFileSize);
                     } else {
